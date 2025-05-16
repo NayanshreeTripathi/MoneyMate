@@ -36,7 +36,6 @@ export async function getCurrentBudget(accountId) {
       0
     );
 
-    // ✅ Removed `accountId` since it's not in your schema
     const expenses = await db.transaction.aggregate({
       where: {
         userId: user.id,
@@ -45,13 +44,12 @@ export async function getCurrentBudget(accountId) {
           gte: startOfMonth,
           lte: endOfMonth,
         },
+        accountId,
       },
       _sum: {
         amount: true,
       },
     });
-
-    console.log("Debug Expenses:", expenses);
 
     return {
       budget: budget ? { ...budget, amount: budget.amount.toNumber() } : null,
