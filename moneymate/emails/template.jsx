@@ -3,12 +3,77 @@ import * as React from "react";
 
 export default function EmailTemplate({
     userName = "",
-    type = "budget-alert",
-    data = {}, 
+    type = "monthly-report",
+    data = {}
 }) {
-    if(type === "monthly-report"){
+    if (type === "monthly-report") {
+    return (
+      <Html>
+        <Head />
+        <Preview>Your Monthly Financial Report</Preview>
+        <Body style={style.body}>
+          <Container style={style.container}>
+            <Heading style={style.title}>Monthly Financial Report</Heading>
 
-    }
+            <Text style={style.text}>Hello {userName},</Text>
+            <Text style={style.text}>
+              Here&rsquo;s your financial summary for {data?.month}:
+            </Text>
+
+            {/* Main Stats */}
+            <Section style={style.statsContainer}>
+              <div style={style.stat}>
+                <Text style={style.text}>Total Income</Text>
+                <Text style={style.heading}>${data?.stats.totalIncome}</Text>
+              </div>
+              <div style={style.stat}>
+                <Text style={style.text}>Total Expenses</Text>
+                <Text style={style.heading}>${data?.stats.totalExpenses}</Text>
+              </div>
+              <div style={style.stat}>
+                <Text style={style.text}>Net</Text>
+                <Text style={style.heading}>
+                  ${data?.stats.totalIncome - data?.stats.totalExpenses}
+                </Text>
+              </div>
+            </Section>
+
+            {/* Category Breakdown */}
+            {data?.stats?.byCategory && (
+              <Section style={style.section}>
+                <Heading style={style.heading}>Expenses by Category</Heading>
+                {Object.entries(data?.stats.byCategory).map(
+                  ([category, amount]) => (
+                    <div key={category} style={style.row}>
+                      <Text style={style.text}>{category}</Text>
+                      <Text style={style.text}>${amount}</Text>
+                    </div>
+                  )
+                )}
+              </Section>
+            )}
+
+            {/* AI Insights */}
+            {data?.insights && (
+              <Section style={style.section}>
+                <Heading style={style.heading}>MoneyMate Insights</Heading>
+                {data.insights.map((insight, index) => (
+                  <Text key={index} style={style.text}>
+                    • {insight}
+                  </Text>
+                ))}
+              </Section>
+            )}
+
+            <Text style={style.footer}>
+              Thank you for using MoneMate. Keep tracking your finances for better
+              financial health!
+            </Text>
+          </Container>
+        </Body>
+      </Html>
+    );
+  }
     if(type === "budget-alert"){
       return (
     <Html>

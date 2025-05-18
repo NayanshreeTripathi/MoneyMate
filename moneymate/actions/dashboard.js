@@ -101,3 +101,24 @@ export async function getUsersAccounts(){
         
         return serializedAccount;
 }
+
+export async function getDashboardData(){
+    const {userId} = await auth();
+        if(!userId){
+           throw new Error('You must be logged in to create an account');
+        }
+        const user = await db.user.findUnique({
+            where: {
+                clerkUserId: userId
+            }
+        });
+        if(!user){
+            throw new Error ("User not found")
+        }
+
+        const transaction = await db.transaction.findMany({
+            where:{userId: user.id},
+            orderBy:{date :"desc"},
+        });
+        return transaction.map(serializedTransaction);
+}
